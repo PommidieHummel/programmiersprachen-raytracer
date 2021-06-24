@@ -1,3 +1,5 @@
+#ifndef SHAPE_HPP
+#define SHAPE_HPP
 #include <iostream>
 #include <vector>
 
@@ -7,11 +9,12 @@ class Shape
 
     Shape();
     Shape(std::string name, std::vector<float> color);
-    virtual float area()const;
-    virtual float volum()const;
+    virtual float area()const = 0;
+    virtual float volum()const = 0;
 
-    private:
+    protected:
     std::string name_;
     std::vector<float> color_;
 
 };
+#endif
