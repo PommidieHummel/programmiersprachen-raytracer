@@ -12,7 +12,7 @@ min_{min},
 max_{max}{}
 
 
-Box::Box(std::string name,std::vector<float> color,glm::vec3 min,glm::vec3 max) :
+Box::Box(std::string name,Color color,glm::vec3 min,glm::vec3 max) :
 Shape::Shape{name,color},
 min_{min},
 max_{max}{}
@@ -31,4 +31,10 @@ float Box::volum()const{
     auto c = max_.z-min_.z;
     return a*b*c;
     
+}
+
+std::ostream& Box::print(std::ostream& os)const{
+    Shape::print(os);
+    std::cout<<"min: "<<min_.x<<min_.y<<min_.z<<"\n"<<"max: "<<max_.x<<max_.y<<max_.z;
+
 }

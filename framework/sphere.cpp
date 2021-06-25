@@ -13,7 +13,7 @@ ctr_{ctr},
 r_{r}{}
 
 
-Sphere::Sphere(std::string name,std::vector<float> color,glm::vec3 ctr,float r) :
+Sphere::Sphere(std::string name,Color color,glm::vec3 ctr,float r) :
 Shape::Shape{name,color},
 ctr_{ctr},
 r_{r}{}
@@ -26,4 +26,9 @@ float Sphere::volum()const{
     return (4/3)* M_PI*r_*r_*r_;
 }
 
+std::ostream& Sphere::print(std::ostream& os)const{
+    Shape::print(os);
+    std::cout<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_;
+
+}
 
