@@ -23,12 +23,12 @@ float Sphere::area()const{
 }
 
 float Sphere::volum()const{
-    return (4/3)* M_PI*r_*r_*r_;
+    return (4* M_PI*r_*r_*r_)/3;
 }
 
 std::ostream& Sphere::print(std::ostream& os)const{
     Shape::print(os);
-    std::cout<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_;
+    std::cout<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_<<"\n";
 
 }
 
