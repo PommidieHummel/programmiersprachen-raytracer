@@ -1,5 +1,7 @@
 #include "sphere.hpp"
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtx/intersect.hpp>
 
 Sphere::Sphere() :
 Shape::Shape{"Sphere",{0.0f,0.0f,0.0f}},
@@ -24,6 +26,13 @@ float Sphere::area()const{
 
 float Sphere::volum()const{
     return (4* M_PI*r_*r_*r_)/3;
+}
+Hitpoint Sphere::intersect(Ray const& r)const{
+    float distance = 1.0f;
+    bool hit = glm::intersectRaySphere(r.origin,glm::normalize(r.direction),ctr_,pow(r_,2),distance);
+    Hitpoint x {hit,distance,name_,color_,r.origin+ distance*r.direction, r.direction};
+    return x;
+
 }
 
 std::ostream& Sphere::print(std::ostream& os)const{
