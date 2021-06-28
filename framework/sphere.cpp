@@ -6,7 +6,7 @@
 Sphere::Sphere() :
 Shape::Shape{"Sphere",{0.0f,0.0f,0.0f}},
 ctr_{0.0f,0.0f,0.0f},
-r_{0.0f}{}
+r_{1.0f}{}
 
 
 Sphere::Sphere(glm::vec3 ctr,float r) :
