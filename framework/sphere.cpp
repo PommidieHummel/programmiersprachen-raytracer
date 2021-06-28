@@ -20,6 +20,10 @@ Shape::Shape{name,color},
 ctr_{ctr},
 r_{r}{}
 
+Sphere::~Sphere(){
+    std::cout<< name_ <<" deleted \n";
+}
+
 float Sphere::area()const{
     return 4* M_PI*r_*r_;
 }

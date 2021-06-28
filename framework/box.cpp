@@ -17,6 +17,11 @@ Shape::Shape{name,color},
 min_{min},
 max_{max}{}
 
+Box::~Box(){
+    std::cout<<"Box deleted \n";
+}
+
+
 float Box::area()const{
     auto a = max_.x-min_.x;
     auto b = max_.y-min_.y;
