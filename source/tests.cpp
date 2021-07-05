@@ -4,6 +4,7 @@
 #include <glm/gtx/intersect.hpp>
 #include "box.hpp"
 #include "sphere.hpp"
+#include "material.hpp"
 
 
 TEST_CASE("test_area", "[area]"){
@@ -58,12 +59,19 @@ sphere_radius * sphere_radius, // squared radius !!!
 distance);
 
 
+
 REQUIRE (h1.intersect);
 REQUIRE (distance == Approx(4.0f));
 REQUIRE (h1.objName == "Sarah");
 REQUIRE (h1.distance == Approx(5.73205f));
 REQUIRE (h2.intersect == false);
 
+}
+
+TEST_CASE ( "print material","[print]")
+{
+  Material mat{"test",{1,0,0},{0,1,0},{0,0,1},5.0f};
+  std::cout<<mat;
 }
 
 TEST_CASE("aufgabe_8", "[virtual]"){
