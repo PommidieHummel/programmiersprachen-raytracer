@@ -3,6 +3,8 @@
 #include "color.hpp"
 #include <iostream>
 #include <vector>
+#include <memory>
+#include <material.hpp>
 
 class Shape
 {
@@ -10,7 +12,7 @@ class Shape
     //Default-Konstruktor
     Shape();
     //Standart-Konstruktor
-    Shape(std::string name, Color color);
+    Shape(std::string name, std::shared_ptr<Material> const& material);
 
     ~Shape();
 
@@ -23,7 +25,7 @@ class Shape
 
     protected:
     std::string name_;
-    Color color_;
+    std::shared_ptr<Material const> material_;
 
 };
 std::ostream& operator<<(std::ostream& os, Shape const& s);

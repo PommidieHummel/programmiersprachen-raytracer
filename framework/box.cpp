@@ -1,19 +1,19 @@
 #include "box.hpp"
 
 Box::Box() :
-Shape::Shape{"Sphere",{0.0f,0.0f,0.0f}},
+Shape::Shape{"Sphere",nullptr},
 min_{0.0f,0.0f,0.0f},
 max_{1.0f,1.0f,1.0f}{}
 
 
 Box::Box(glm::vec3 min,glm::vec3 max) :
-Shape::Shape{"Sphere",{0.0f,0.0f,0.0f}},
+Shape::Shape{"Sphere",nullptr},
 min_{min},
 max_{max}{}
 
 
-Box::Box(std::string name,Color color,glm::vec3 min,glm::vec3 max) :
-Shape::Shape{name,color},
+Box::Box(std::string name,std::shared_ptr<Material> const& material,glm::vec3 min,glm::vec3 max) :
+Shape::Shape{name,material},
 min_{min},
 max_{max}{}
 
@@ -40,6 +40,6 @@ float Box::volum()const{
 
 std::ostream& Box::print(std::ostream& os)const{
     Shape::print(os);
-    std::cout<<"min: "<<min_.x<<min_.y<<min_.z<<"\n"<<"max: "<<max_.x<<max_.y<<max_.z<<"\n";
+    os<<"min: "<<min_.x<<min_.y<<min_.z<<"\n"<<"max: "<<max_.x<<max_.y<<max_.z<<"\n";
 
 }

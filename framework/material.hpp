@@ -8,7 +8,7 @@ struct Material{
     Color ka = {0,0,0};
     Color kd = {0,0,0};
     Color ks = {0,0,0};
-    float m = 0;
+    float m = 0.0f;
 };
 
 std::ostream& operator<<(std::ostream& os,Material const& mat){
