@@ -39,14 +39,68 @@ float Box::volum()const{
 }
 Hitpoint Box::intersect(Ray const& r)const{
     bool hit = false;
-    auto px = min_.x;
-    auto t=(px-r.origin.x)/r.direction.x;
+    float closest_t = 0.0f;
+    auto px1 = min_.x;
+    auto t=(px1-r.origin.x)/r.direction.x;
     auto py =(r.origin.y)+t+r.direction.y;
     auto pz =(r.origin.z)+t+r.direction.z;
     if(min_.y<=py&& py<=max_.y&&min_.z<=pz&&pz<=max_.z){
         hit = true;
-        auto closest_t = t;
+        closest_t = t;
     }
+    auto px2 = max_.x;
+    t=(px2-r.origin.x)/r.direction.x;
+    py =(r.origin.y)+t+r.direction.y;
+    pz =(r.origin.z)+t+r.direction.z;
+    if(min_.y<=py&& py<=max_.y&&min_.z<=pz&&pz<=max_.z){
+        hit = true;
+        if(t<closest_t){
+            auto closest_t = t;
+        }
+    }
+    auto py1 = min_.y;
+    t=(py1-r.origin.y)/r.direction.y;
+    auto px =(r.origin.x)+t+r.direction.x;
+    pz =(r.origin.z)+t+r.direction.z;
+    if(min_.x<=px&& px<=max_.x&&min_.z<=pz&&pz<=max_.z){
+        hit = true;
+        if(t<closest_t){
+            auto closest_t = t;
+        }
+    }
+    auto py2 = max_.y;
+    t=(py2-r.origin.y)/r.direction.y;
+    px =(r.origin.x)+t+r.direction.x;
+    pz =(r.origin.z)+t+r.direction.z;
+    if(min_.x<=px&& px<=max_.x&&min_.z<=pz&&pz<=max_.z){
+        hit = true;
+        if(t<closest_t){
+            auto closest_t = t;
+        }
+    }
+    auto pz1 = min_.z;
+    t=(pz1-r.origin.z)/r.direction.z;
+    px =(r.origin.x)+t+r.direction.x;
+    py =(r.origin.y)+t+r.direction.y;
+    if(min_.x<=px&& px<=max_.x&&min_.y<=py&&py<=max_.y){
+        hit = true;
+        if(t<closest_t){
+            auto closest_t = t;
+        }
+    }
+    auto pz2 = max_.z;
+    t=(pz2-r.origin.z)/r.direction.z;
+    px =(r.origin.x)+t+r.direction.x;
+    py =(r.origin.y)+t+r.direction.y;
+    if(min_.x<=px&& px<=max_.x&&min_.y<=py&&py<=max_.y){
+        hit = true;
+        if(t<closest_t){
+            auto closest_t = t;
+        }
+    }
+    Hitpoint x{hit,closest_t,name_,material_,r.origin+closest_t*r.direction};
+    return x;
+
 }
 
 std::ostream& Box::print(std::ostream& os)const{
