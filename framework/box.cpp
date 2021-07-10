@@ -37,6 +37,17 @@ float Box::volum()const{
     return a*b*c;
     
 }
+Hitpoint Box::intersect(Ray const& r)const{
+    bool hit = false;
+    auto px = min_.x;
+    auto t=(px-r.origin.x)/r.direction.x;
+    auto py =(r.origin.y)+t+r.direction.y;
+    auto pz =(r.origin.z)+t+r.direction.z;
+    if(min_.y<=py&& py<=max_.y&&min_.z<=pz&&pz<=max_.z){
+        hit = true;
+        auto closest_t = t;
+    }
+}
 
 std::ostream& Box::print(std::ostream& os)const{
     Shape::print(os);
