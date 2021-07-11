@@ -10,13 +10,10 @@ struct Material{
     Color ks = {0,0,0};
     float m = 0.0f;
  
+std::ostream& print(std::ostream& os)const;
 };
-/*
-std::ostream& operator<<(std::ostream& os,Material const& mat){
-    os<<"name: "<<mat.name;
-    os<<"material coefficient ka: "<<mat.ka<<"\n";
-    os<<"material coefficient kd: "<<mat.kd<<"\n";
-    os<<"material coefficient ks: "<<mat.ks<<"\n";
-    os<<"specularreflection exponent: "<<mat.m<<"\n";
-};*/
+
+std::ostream& operator<<(std::ostream& os,Material const& mat);
+
+
 #endif

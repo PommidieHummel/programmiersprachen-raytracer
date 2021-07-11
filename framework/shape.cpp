@@ -1,6 +1,5 @@
 #include "shape.hpp"
 
-
 Shape::Shape():
 material_{nullptr},
 name_{"Shape"}{}
@@ -15,7 +14,7 @@ Shape::~Shape(){
 }
 
 std::ostream& Shape::print(std::ostream& os)const{
-    os<<"name: "<<name_<<"\n"<<"material: "<<material_;
+    os<<"name: "<<name_;
     return os;
 }
 std::ostream& operator<<(std::ostream& os, Shape const& s){

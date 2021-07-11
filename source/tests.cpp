@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_RUNNER
+#include "box.hpp"
+#include "sphere.hpp"
+#include "color.hpp"
 #include <catch.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
-#include "box.hpp"
-#include "sphere.hpp"
-#include "material.hpp"
 #include <memory>
 
 
@@ -22,7 +22,7 @@ TEST_CASE("test_area", "[area]"){
   REQUIRE (y1.area() == Approx(150.0f));
   REQUIRE (y2.area() == Approx(130.0f));
 
-  std::cout<<x2<<"\n"<<y2;
+  //std::cout<<x2<<"\n"<<y2;
   
 }
 
@@ -55,10 +55,13 @@ glm::vec3 ray_direction{0.0f , 0.0f , 1.0f };
 // Sphere
 Ray r1{{0.0f,0.0f,0.0f},{1.0f,1.0f,1.0f}};
 Ray r2{{0.0f,0.0f,0.0f},{0.0f,0.0f,1.0f}};
+Ray r3{{1.0f,1.0f,15.0f},{0.0f,0.0f,10.0f}};
 Sphere x1{"Sarah",mat,{1.0f,1.0f,1.0f},4.0f};
 Sphere x2{"Sett",mat,{5.0f,5.0f,0.0f},4.0f};
+Box y1{"Bert",mat,{0.0f,0.0f,0.0f},{10.0f,10.0f,10.0f}};
 Hitpoint h1 =x1.intersect(r1);
 Hitpoint h2 =x2.intersect(r2);
+Hitpoint h3 =y1.intersect(r3);
 glm::vec3 sphere_center{0.0f, 0.0f, 5.0f};
 float sphere_radius{1.0f};
 float distance = 0.0f;
@@ -75,13 +78,15 @@ REQUIRE (distance == Approx(4.0f));
 REQUIRE (h1.objName == "Sarah");
 REQUIRE (h1.distance == Approx(5.73205f));
 REQUIRE (h2.intersect == false);
+REQUIRE (h3.intersect);
+REQUIRE (h3.objName == "Bert");
 
 }
 
 TEST_CASE ( "print material","[print]")
 {
   Material mat{"test",{1,0,0},{0,1,0},{0,0,1},5.0f};
-  std::cout<<mat;
+  //std::cout<<mat;
 }
 
 

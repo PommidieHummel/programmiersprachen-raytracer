@@ -1,10 +1,11 @@
 #ifndef SHAPE_HPP
 #define SHAPE_HPP
+#include "material.hpp"
 #include "color.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <material.hpp>
+
 
 class Shape
 {

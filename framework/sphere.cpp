@@ -42,6 +42,7 @@ Hitpoint Sphere::intersect(Ray const& r)const{
 std::ostream& Sphere::print(std::ostream& os)const{
     Shape::print(os);
     os<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_<<"\n";
+    
 
 }
 
