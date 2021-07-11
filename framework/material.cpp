@@ -1,7 +1,7 @@
 #include "material.hpp"
 
 std::ostream& Material::print(std::ostream& os)const{
-    os<<"name: "<<name
+    os<<"material name: "<<name<<"\n"
     <<"material coefficient ka: "<<ka<<"\n"
     <<"material coefficient kd: "<<kd<<"\n"
     <<"material coefficient ks: "<<ks<<"\n"
