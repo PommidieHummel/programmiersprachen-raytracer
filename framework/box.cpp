@@ -37,65 +37,65 @@ float Box::volum()const{
     return a*b*c;
     
 }
-Hitpoint Box::intersect(Ray const& r)const{
+Hitpoint Box::intersect(Ray const& r,float& t)const{
     bool hit = false;
     float closest_t = 0.0f;
     auto px1 = min_.x;
-    auto t=(px1-r.origin.x)/r.direction.x;
-    auto py =(r.origin.y)+t+r.direction.y;
-    auto pz =(r.origin.z)+t+r.direction.z;
+    auto t_dist=(px1-r.origin.x)/r.direction.x;
+    auto py =(r.origin.y)+t_dist+r.direction.y;
+    auto pz =(r.origin.z)+t_dist+r.direction.z;
     if(min_.y<=py&& py<=max_.y&&min_.z<=pz&&pz<=max_.z){
         hit = true;
-        closest_t = t;
+        closest_t = t_dist;
     }
     auto px2 = max_.x;
-    t=(px2-r.origin.x)/r.direction.x;
-    py =(r.origin.y)+t+r.direction.y;
-    pz =(r.origin.z)+t+r.direction.z;
+    t_dist=(px2-r.origin.x)/r.direction.x;
+    py =(r.origin.y)+t_dist+r.direction.y;
+    pz =(r.origin.z)+t_dist+r.direction.z;
     if(min_.y<=py&& py<=max_.y&&min_.z<=pz&&pz<=max_.z){
         hit = true;
-        if(t<closest_t){
-            auto closest_t = t;
+        if(t_dist<closest_t){
+            auto closest_t = t_dist;
         }
     }
     auto py1 = min_.y;
-    t=(py1-r.origin.y)/r.direction.y;
-    auto px =(r.origin.x)+t+r.direction.x;
-    pz =(r.origin.z)+t+r.direction.z;
+    t_dist=(py1-r.origin.y)/r.direction.y;
+    auto px =(r.origin.x)+t_dist+r.direction.x;
+    pz =(r.origin.z)+t_dist+r.direction.z;
     if(min_.x<=px&& px<=max_.x&&min_.z<=pz&&pz<=max_.z){
         hit = true;
-        if(t<closest_t){
-            auto closest_t = t;
+        if(t_dist<closest_t){
+            auto closest_t = t_dist;
         }
     }
     auto py2 = max_.y;
-    t=(py2-r.origin.y)/r.direction.y;
-    px =(r.origin.x)+t+r.direction.x;
-    pz =(r.origin.z)+t+r.direction.z;
+    t_dist=(py2-r.origin.y)/r.direction.y;
+    px =(r.origin.x)+t_dist+r.direction.x;
+    pz =(r.origin.z)+t_dist+r.direction.z;
     if(min_.x<=px&& px<=max_.x&&min_.z<=pz&&pz<=max_.z){
         hit = true;
-        if(t<closest_t){
-            auto closest_t = t;
+        if(t_dist<closest_t){
+            auto closest_t = t_dist;
         }
     }
     auto pz1 = min_.z;
-    t=(pz1-r.origin.z)/r.direction.z;
-    px =(r.origin.x)+t+r.direction.x;
-    py =(r.origin.y)+t+r.direction.y;
+    t_dist=(pz1-r.origin.z)/r.direction.z;
+    px =(r.origin.x)+t_dist+r.direction.x;
+    py =(r.origin.y)+t_dist+r.direction.y;
     if(min_.x<=px&& px<=max_.x&&min_.y<=py&&py<=max_.y){
         hit = true;
-        if(t<closest_t){
-            auto closest_t = t;
+        if(t_dist<closest_t){
+            auto closest_t = t_dist;
         }
     }
     auto pz2 = max_.z;
-    t=(pz2-r.origin.z)/r.direction.z;
-    px =(r.origin.x)+t+r.direction.x;
-    py =(r.origin.y)+t+r.direction.y;
+    t_dist=(pz2-r.origin.z)/r.direction.z;
+    px =(r.origin.x)+t_dist+r.direction.x;
+    py =(r.origin.y)+t_dist+r.direction.y;
     if(min_.x<=px&& px<=max_.x&&min_.y<=py&&py<=max_.y){
         hit = true;
-        if(t<closest_t){
-            auto closest_t = t;
+        if(t_dist<closest_t){
+            auto closest_t = t_dist;
         }
     }
     Hitpoint x{hit,closest_t,name_,material_,r.origin+closest_t*r.direction};

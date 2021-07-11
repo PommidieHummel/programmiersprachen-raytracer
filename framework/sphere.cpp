@@ -31,8 +31,8 @@ float Sphere::area()const{
 float Sphere::volum()const{
     return (4* M_PI*r_*r_*r_)/3;
 }
-Hitpoint Sphere::intersect(Ray const& r)const{
-    float distance = 1.0f;
+Hitpoint Sphere::intersect(Ray const& r,float& t)const{
+    float distance = t;
     bool hit = glm::intersectRaySphere(r.origin,glm::normalize(r.direction),ctr_,pow(r_,2),distance);
     Hitpoint x {hit,distance,name_,material_,r.origin+ distance*r.direction, r.direction};
     return x;

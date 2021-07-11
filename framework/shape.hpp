@@ -2,6 +2,8 @@
 #define SHAPE_HPP
 #include "material.hpp"
 #include "color.hpp"
+#include "hitpoint.hpp"
+#include "ray.hpp"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -22,6 +24,7 @@ class Shape
     virtual float area()const = 0;
     virtual float volum()const = 0;
     virtual std::ostream& print(std::ostream& os)const;
+    virtual Hitpoint intersect (Ray const& ray, float& t)const= 0;
 
 
     protected:
