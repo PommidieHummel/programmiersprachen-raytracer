@@ -12,27 +12,29 @@ void sdfReader(std::string const& sdfFile){
 
             string_stream >>define;
             if(define =="define"){
-                std::string name;
-                Color ka;
-                Color ks;
-                Color kd;
-                float m;
-                //reading name
-                string_stream >> name;
-                //reading ka
-                string_stream >> ka.r;
-                string_stream >> ka.g;
-                string_stream >> ka.b;
-                //reading ks
-                string_stream >> ks.r;
-                string_stream >> ks.g;
-                string_stream >> ks.b;
-                //reading kd
-                string_stream >> kd.r;
-                string_stream >> kd.g;
-                string_stream >> kd.b;
-                //reading m
-                string_stream >> m;
+                std::string ident;
+                if(ident =="material"){
+                    std::string name;
+                    Color ka;
+                    Color ks;
+                    Color kd;
+                    float m;
+                    //reading name
+                    string_stream >> name;
+                    //reading ka
+                    string_stream >> ka.r;
+                    string_stream >> ka.g;
+                    string_stream >> ka.b;
+                    //reading ks
+                    string_stream >> ks.r;
+                    string_stream >> ks.g;
+                    string_stream >> ks.b;
+                    //reading kd
+                    string_stream >> kd.r;
+                    string_stream >> kd.g;
+                    string_stream >> kd.b;
+                    //reading m
+                    string_stream >> m;
 
         //saving shared pointer of material in file in vector    
         Material material{name,{ka.r,ka.g,ka.b},{ks.r,ks.g,ks.b},{kd.r,kd.g,kd.b},m};
@@ -42,7 +44,7 @@ void sdfReader(std::string const& sdfFile){
         mat_vector.push_back(mat);
 
 
-
+                }
             }
         }
 }
