@@ -3,6 +3,7 @@
 
 #include "material.hpp"
 #include "color.hpp"
+#include "shape.hpp"
 #include <vector>
 #include <memory>
 #include <iostream>
