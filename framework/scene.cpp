@@ -97,9 +97,21 @@ void sdfReader(std::string const &sdfFile)
             {
                 std::string cameraName;
                 float fovx;
+                glm::vec3 eye;
+                glm::vec3 dir;
+                glm::vec3 up;
 
                 string_stream >> cameraName;
                 string_stream >> fovx;
+                string_stream >> eye.x;
+                string_stream >> eye.y;
+                string_stream >> eye.z;
+                string_stream >> dir.x;
+                string_stream >> dir.y;
+                string_stream >> dir.z;
+                string_stream >> up.x;
+                string_stream >> up.y;
+                string_stream >> up.z;
             }
             if (ident == "render")
             {
