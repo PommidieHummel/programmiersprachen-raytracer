@@ -90,9 +90,9 @@ TEST_CASE("intersect_ray_box", "[intersect_box]")
   Ray r3{{1.0f, 1.0f, 15.0f}, {0.0f, 0.0f, 10.0f}};
   //Box
   Box y1{"Bert", mat, {0.0f, 0.0f, 0.0f}, {10.0f, 10.0f, 10.0f}};
-  float f = 1.0f;
+  float ff = 1.0f;
   //intersection Box/Ray
-  Hitpoint h3 = y1.intersect(r3, f);
+  Hitpoint h3 = y1.intersect(r3, ff);
 
   REQUIRE(h3.intersect);
   REQUIRE(h3.objName == "Bert");
