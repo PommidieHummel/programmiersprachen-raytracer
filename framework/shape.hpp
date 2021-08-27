@@ -25,11 +25,13 @@ class Shape
     virtual float volum()const = 0;
     virtual std::ostream& print(std::ostream& os)const;
     virtual Hitpoint intersect (Ray const& ray, float& t)const= 0;
-
+    Ray transformRay(glm::mat4 const& mat, Ray const& ray) const;
 
     protected:
     std::string name_;
     std::shared_ptr<Material const> material_;
+    glm::mat4 world_transformation_;
+    glm::mat4 world_transformation_inv_;
 
 };
 std::ostream& operator<<(std::ostream& os, Shape const& s);
