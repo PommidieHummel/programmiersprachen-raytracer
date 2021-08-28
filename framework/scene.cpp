@@ -1,21 +1,23 @@
 #include "scene.hpp"
 
-void sdfReader(std::string const &sdfFile)
+Scene sdfReader(std::string const &sdfFile)
 {
 
-    std::ifstream input_file(sdfFile);
+    std::ifstream input_file;
+    input_file.open(sdfFile);
+    std::string define;
     std::string line;
+    std::string ident;
+    Scene s;
 
     while (getline(input_file, line))
     {
         std::istringstream string_stream(line);
-        std::string define;
-
         string_stream >> define;
         if (define == "define")
         {
-            std::string ident;
-            if (ident == "material")
+            string_stream >> ident;
+            if ("material" == ident)
             {
                 std::string name;
                 Color ka;
@@ -39,12 +41,11 @@ void sdfReader(std::string const &sdfFile)
                 //reading m
                 string_stream >> m;
 
+
                 //saving shared pointer of material in file in vector
                 Material material{name, {ka.r, ka.g, ka.b}, {ks.r, ks.g, ks.b}, {kd.r, kd.g, kd.b}, m};
-                auto x = std::make_shared<Material>(material);
-                std::shared_ptr<Material> mat = x;
-                std::vector<std::shared_ptr<Material>> mat_vector;
-                mat_vector.push_back(mat);
+                std::shared_ptr<Material> mat = std::make_shared<Material>(material);
+                s.material_map.insert(std::make_pair(name, mat));
             }
             if (ident == "shape")
             {
@@ -53,14 +54,23 @@ void sdfReader(std::string const &sdfFile)
                 if (sident == "box")
                 {
                     std::string boxName;
-                    float min;
-                    float max;
+                    glm::vec3 min;
+                    glm::vec3 max;
                     std::string matNameForBox;
 
                     string_stream >> boxName;
-                    string_stream >> min;
-                    string_stream >> max;
+                    string_stream >> min.x;
+                    string_stream >> min.y;
+                    string_stream >> min.z;
+                    string_stream >> max.x;
+                    string_stream >> max.y;
+                    string_stream >> max.z;
                     string_stream >> matNameForBox;
+
+                    auto material = s.material_map.find(matNameForBox);
+                    Box box{boxName, material->second, min, max};
+                    std::shared_ptr<Shape> x = std::make_shared<Box>(box);
+                    s.shape_vec.push_back(x);
                 }
                 if (sident == "sphere")
                 {
@@ -75,6 +85,11 @@ void sdfReader(std::string const &sdfFile)
                     string_stream >> ctr.z;
                     string_stream >> r;
                     string_stream >> matNameForSphere;
+
+                    auto material = s.material_map.find(matNameForSphere);
+                    Sphere sphere{sphereName, material->second, ctr, r};
+                    std::shared_ptr<Shape> x = std::make_shared<Sphere>(sphere);
+                    s.shape_vec.push_back(x);
                 }
             }
             if (ident == "light")
@@ -92,40 +107,56 @@ void sdfReader(std::string const &sdfFile)
                 string_stream >> color.g;
                 string_stream >> color.b;
                 string_stream >> brightness;
+
+                Light light{nameLight, pos, color, brightness};
+                std::shared_ptr<Light> x = std::make_shared<Light>(light);
+                s.light_vec.push_back(x);
+            }
+            if (ident == "ambient")
+            {
+                std::string ambName;
+                glm::vec3 ambient;
+
+                string_stream >> ambName;
+                string_stream >> ambient.x;
+                string_stream >> ambient.y;
+                string_stream >> ambient.z;
+
+                s.ambient.ambName = ambName;
+                s.ambient.color = ambient;
             }
             if (ident == "camera")
             {
                 std::string cameraName;
                 float fovx;
-                glm::vec3 eye;
-                glm::vec3 dir;
-                glm::vec3 up;
 
                 string_stream >> cameraName;
                 string_stream >> fovx;
-                string_stream >> eye.x;
-                string_stream >> eye.y;
-                string_stream >> eye.z;
-                string_stream >> dir.x;
-                string_stream >> dir.y;
-                string_stream >> dir.z;
-                string_stream >> up.x;
-                string_stream >> up.y;
-                string_stream >> up.z;
+
+                s.camera.name = cameraName;
+                s.camera.fovx = fovx;
             }
             if (ident == "render")
             {
                 std::string camNameForRender;
                 std::string file;
-                int xres;
-                int yres;
+                unsigned xres;
+                unsigned yres;
 
                 string_stream >> camNameForRender;
                 string_stream >> file;
                 string_stream >> xres;
                 string_stream >> yres;
+
+                s.render.camName = camNameForRender;
+                s.render.fileName = file;
+                s.render.xres = xres;
+                s.render.yres = yres;
+
+                Renderer render{xres, yres, file};
             }
             //shape -> box, sphere; light -> ambient; camera; render
         }
     }
+    return s;
 }
