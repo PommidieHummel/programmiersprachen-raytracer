@@ -41,7 +41,6 @@ Scene sdfReader(std::string const &sdfFile)
                 //reading m
                 string_stream >> m;
 
-
                 //saving shared pointer of material in file in vector
                 Material material{name, {ka.r, ka.g, ka.b}, {ks.r, ks.g, ks.b}, {kd.r, kd.g, kd.b}, m};
                 std::shared_ptr<Material> mat = std::make_shared<Material>(material);
@@ -115,15 +114,17 @@ Scene sdfReader(std::string const &sdfFile)
             if (ident == "ambient")
             {
                 std::string ambName;
-                glm::vec3 ambient;
+                Color ambient;
 
                 string_stream >> ambName;
-                string_stream >> ambient.x;
-                string_stream >> ambient.y;
-                string_stream >> ambient.z;
+                string_stream >> ambient.r;
+                string_stream >> ambient.g;
+                string_stream >> ambient.b;
 
                 s.ambient.ambName = ambName;
-                s.ambient.color = ambient;
+                s.ambient.color.r = ambient.r;
+                s.ambient.color.g = ambient.g;
+                s.ambient.color.b = ambient.b;
             }
             if (ident == "camera")
             {
@@ -132,31 +133,32 @@ Scene sdfReader(std::string const &sdfFile)
 
                 string_stream >> cameraName;
                 string_stream >> fovx;
-
                 s.camera.name = cameraName;
                 s.camera.fovx = fovx;
             }
-            if (ident == "render")
-            {
-                std::string camNameForRender;
-                std::string file;
-                unsigned xres;
-                unsigned yres;
-
-                string_stream >> camNameForRender;
-                string_stream >> file;
-                string_stream >> xres;
-                string_stream >> yres;
-
-                s.render.camName = camNameForRender;
-                s.render.fileName = file;
-                s.render.xres = xres;
-                s.render.yres = yres;
-
-                Renderer render{xres, yres, file};
-            }
-            //shape -> box, sphere; light -> ambient; camera; render
         }
+        if (define == "render")
+        {
+            std::string camNameForRender;
+            std::string file;
+            unsigned xres;
+            unsigned yres;
+
+            string_stream >> camNameForRender;
+            string_stream >> file;
+            string_stream >> xres;
+            string_stream >> yres;
+
+            s.render.camName = camNameForRender;
+            s.render.fileName = file;
+            s.render.xres = xres;
+            s.render.yres = yres;
+
+            std::cout << s.render.camName << "\n"<<s.render.fileName<<"\n";
+        }
+        //shape -> box, sphere; light -> ambient; camera; render
     }
+    std::cout << s.camera.fovx << "\n"
+              << s.render.fileName << "\n";
     return s;
 }

@@ -3,9 +3,9 @@
 #include <iostream>
 struct Render
 {
-    std::string camName{" "};
-    std::string fileName{" "};
-    unsigned xres{0};
-    unsigned yres{0};
+    std::string camName;
+    std::string fileName;
+    unsigned xres;
+    unsigned yres;
 };
 #endif

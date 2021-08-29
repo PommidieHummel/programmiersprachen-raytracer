@@ -1,5 +1,6 @@
 #include <renderer.hpp>
 #include <window.hpp>
+#include <scene.hpp>
 
 #include <GLFW/glfw3.h>
 #include <thread>
@@ -11,10 +12,9 @@ int main(int argc, char* argv[])
 {
   unsigned const image_width = 800;
   unsigned const image_height = 600;
-  std::string const filename = "./checkerboard.ppm";
-
-  Renderer renderer{image_width, image_height, filename};
-
+  std::string const scenefile = "./easyscene.txt";
+  Scene scene = sdfReader(scenefile);
+  Renderer renderer{image_width, image_height, scenefile};
   renderer.render();
 
   Window window{{image_width, image_height}};

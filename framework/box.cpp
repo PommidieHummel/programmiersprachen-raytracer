@@ -32,7 +32,7 @@ float Box::volum() const
     auto c = max_.z - min_.z;
     return a * b * c;
 }
-Hitpoint Box::intersect(Ray const &r, float &t) const
+Hitpoint Box::intersect(Ray const &r) const
 {
     bool hit = false;
     float closest_t = 0.0f;

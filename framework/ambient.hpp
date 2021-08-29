@@ -5,7 +5,7 @@
 
 struct Ambient{
     std::string ambName{" "};
-    glm::vec3 color{0,0,0};
+    Color color{0,0,0};
 };
 
 #endif

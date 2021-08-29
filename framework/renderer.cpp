@@ -14,6 +14,16 @@ Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
 {
 }
 
+void raycast() {}
+Color trace(Ray const &ray, Scene const &scene)
+{
+  Hitpoint closest_t;
+  for (int i;scene.shape_vec.size();i++)
+  {
+    Hitpoint t = intersect(ray,scene.shape_vec[i]);
+  }
+}
+
 void Renderer::render()
 {
   std::size_t const checker_pattern_size = 20;
