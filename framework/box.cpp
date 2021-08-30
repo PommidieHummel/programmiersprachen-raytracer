@@ -34,6 +34,7 @@ float Box::volum() const
 }
 Hitpoint Box::intersect(Ray const &r) const
 {
+    Ray transfRay{ transformRay(world_transformation_inv_, r) };        //use inverse transfmatrix on the ray
     bool hit = false;
     float closest_t = 0.0f;
     auto px1 = min_.x;
