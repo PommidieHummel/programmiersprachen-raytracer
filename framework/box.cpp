@@ -13,9 +13,7 @@ Box::Box(std::string name, std::shared_ptr<Material> const &material, glm::vec3 
                                                                                                       max_{max} {}
 
 Box::~Box()
-{
-    std::cout << "Box deleted \n";
-}
+{}
 
 float Box::area() const
 {

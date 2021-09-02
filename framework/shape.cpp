@@ -7,9 +7,7 @@ Shape::Shape(std::string name, std::shared_ptr<Material> const& material) : name
                                                                             material_{material} {}
 
 Shape::~Shape()
-{
-    std::cout << "Shape deleted \n";
-}
+{}
 
 std::ostream &Shape::print(std::ostream &os) const
 {

@@ -29,6 +29,6 @@ struct Scene
     Render render;
 };
 
-Scene sdfReader(std::string const &sdfFile);
+Scene sdfReader(std::string const& sdfFile);
 
 #endif

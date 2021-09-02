@@ -22,7 +22,6 @@ ctr_{ctr},
 r_{r}{}
 
 Sphere::~Sphere(){
-    std::cout<< name_ <<" deleted \n";
 }
 
 float Sphere::area()const{
