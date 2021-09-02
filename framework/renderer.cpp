@@ -43,8 +43,8 @@ Color trace(Ray const &ray, Scene const& scene)
 Color shade(Scene const& scene,Ray const& ray,Hitpoint t){
   auto scenelight = scene.light_vec[1].get();
   Ray shadow;
-  Map::const_iterator it =scene.material_map.begin(),
-  auto material = ->second;
+  std::map<std::string,std::shared_ptr<Material>>::const_iterator it =scene.material_map.begin();
+  auto Material = it->second;
   shadow.direction = scenelight->pos - t.hitpoint;
   for(int i;scene.shape_vec.size();i++){
     auto object= scene.shape_vec[i].get();
@@ -52,7 +52,8 @@ Color shade(Scene const& scene,Ray const& ray,Hitpoint t){
     if( Hit.intersect){
       return {0,0,0};
     }
-    return scene.material_map->second.ka * scene.light_vec[1].get()->brightness;
+    Color mka={Material->ka.r * scene.light_vec[1].get()->brightness,Material->ka.g * scene.light_vec[1].get()->brightness,Material->ka.b * scene.light_vec[1].get()->brightness};
+    return mka;
   }
   
 
