@@ -24,7 +24,7 @@ class Shape
     virtual float area()const = 0;
     virtual float volum()const = 0;
     virtual std::ostream& print(std::ostream& os)const;
-    virtual Hitpoint intersect (Ray const& ray, float& t)const= 0;
+    virtual Hitpoint intersect (Ray const& ray)const =0;
     Ray transformRay(glm::mat4 const& mat, Ray const& ray) const;
 
     protected:

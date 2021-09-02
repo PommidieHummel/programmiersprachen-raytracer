@@ -16,7 +16,7 @@ TEST_CASE("SDFreader", "[Scene]")
   Box y2{"rbottom", x, {-100.0f, -80.0f, -200.0f}, {100.0f, 80.0f, -100.0f}};
 */
   Scene test = sdfReader("easyscene.txt");
-  /*std::cout<<test.camera.name;
+  std::cout<<test.camera.name;
   auto a1 = test.camera.name;
   auto a2 = test.camera.fovx;
 
@@ -25,7 +25,7 @@ TEST_CASE("SDFreader", "[Scene]")
 
   REQUIRE( a1 == "eye");
   REQUIRE( a2 == 45.0);
-  REQUIRE(b1 == "easyscene.txt");*/
+  REQUIRE(b1 == "easyscene.txt");
 }
 
 int main(int argc, char *argv[])

@@ -40,7 +40,7 @@ private:
   std::string filename_;
   PpmWriter ppm_;
 };
-void raycast();
+Ray raycast(Scene const& scene);
 Color trace(Ray const& ray,Scene const& scene);
-Color shade(Shape *s,Ray const& r,float t);
+Color shade(Ray const& r,Scene const& scene,Hitpoint t);
 #endif // #ifndef BUW_RENDERER_HPP
