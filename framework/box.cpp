@@ -113,6 +113,6 @@ Hitpoint Box::intersect(Ray const &r) const
 std::ostream &Box::print(std::ostream &os) const
 {
     Shape::print(os);
-    os << "min: " << min_.x << min_.y << min_.z << "\n"
+    return os << "min: " << min_.x << min_.y << min_.z << "\n"
        << "max: " << max_.x << max_.y << max_.z << "\n";
 }
