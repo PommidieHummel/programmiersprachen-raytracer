@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
   std::string const scenefile = "./testscene.txt";
   std::string const file;
   Scene scene = sdfReader(scenefile);
-  std::cout<<scene.camera.fovx<<scene.camera.name;
+  std::cout << scene.camera.name << scene.camera.fovx;
   /*Renderer renderer{image_width, image_height, file};
   renderer.render(scenefile);
 

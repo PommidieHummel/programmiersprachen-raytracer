@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "sphere.hpp"
 #include <cmath>
 #include <glm/glm.hpp>
@@ -43,8 +44,7 @@ Hitpoint Sphere::intersect(Ray const& r)const{
 
 std::ostream& Sphere::print(std::ostream& os)const{
     Shape::print(os);
-    os<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_<<"\n";
+    return os<<"centre: "<<ctr_.x<<ctr_.y<<ctr_.z<<"\n"<<"radius: "<<r_<<"\n";
     
 
 }
-

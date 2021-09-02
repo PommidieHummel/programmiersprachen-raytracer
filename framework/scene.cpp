@@ -17,7 +17,7 @@ Scene sdfReader(std::string const &sdfFile)
         if (define == "define")
         {
             string_stream >> ident;
-            if ("material" == ident)
+            if (ident == "material")
             {
                 std::string name;
                 Color ka;
@@ -158,8 +158,13 @@ Scene sdfReader(std::string const &sdfFile)
 
             
         }
+        //if (define == "transform")
+        //{
+        //    std::string objname >> define;
+        //}
         std::cout<<s.render.camName<<s.camera.fovx;
         //shape -> box, sphere; light -> ambient; camera; render
     }
+    input_file.close();
     return s;
 }
