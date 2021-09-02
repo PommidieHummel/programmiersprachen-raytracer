@@ -43,6 +43,7 @@ Scene sdfReader(std::string const &sdfFile)
 
                 //saving shared pointer of material in file in vector
                 Material material{name, {ka.r, ka.g, ka.b}, {ks.r, ks.g, ks.b}, {kd.r, kd.g, kd.b}, m};
+                std::cout<<material.name<<" "<<material.ka.r;
                 std::shared_ptr<Material> mat = std::make_shared<Material>(material);
                 s.material_map.insert(std::make_pair(name, mat));
             }
@@ -135,6 +136,7 @@ Scene sdfReader(std::string const &sdfFile)
                 string_stream >> fovx;
                 s.camera.name = cameraName;
                 s.camera.fovx = fovx;
+                std::cout<<s.camera.name<<cameraName;
             }
         }
         if (define == "render")
@@ -154,11 +156,10 @@ Scene sdfReader(std::string const &sdfFile)
             s.render.xres = xres;
             s.render.yres = yres;
 
-            std::cout << s.render.camName << "\n"<<s.render.fileName<<"\n";
+            
         }
+        std::cout<<s.render.camName<<s.camera.fovx;
         //shape -> box, sphere; light -> ambient; camera; render
     }
-    std::cout << s.camera.fovx << "\n"
-              << s.render.fileName << "\n";
     return s;
 }

@@ -25,7 +25,7 @@ public:
   Renderer(unsigned w, unsigned h, std::string const& file);
 
   
-  void render();
+  void render(std::string file);
   void write(Pixel const& p);
 
   inline std::vector<Color> const& color_buffer() const
@@ -40,7 +40,8 @@ private:
   std::string filename_;
   PpmWriter ppm_;
 };
-Ray raycast(Scene const& scene);
-Color trace(Ray const& ray,Scene const& scene);
-Color shade(Ray const& r,Scene const& scene,Hitpoint t);
+
+Ray raycast(std::string file);
+Color trace(Ray const& ray,std::string file );
+Color shade(Ray const& r,std::string file,Hitpoint t);
 #endif // #ifndef BUW_RENDERER_HPP
