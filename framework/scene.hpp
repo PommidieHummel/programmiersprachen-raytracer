@@ -7,7 +7,7 @@
 #include "box.hpp"
 #include "sphere.hpp"
 #include "camera.hpp"
-#include "renderer.hpp"
+//#include "renderer.hpp"
 #include "ambient.hpp"
 #include "light.hpp"
 #include "render.hpp"

@@ -6,7 +6,7 @@
 //
 // Renderer
 // -----------------------------------------------------------------------------
-
+#define _USE_MATH_DEFINES
 #include "renderer.hpp"
 #include "scene.hpp"
 
