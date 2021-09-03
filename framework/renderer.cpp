@@ -8,91 +8,68 @@
 // -----------------------------------------------------------------------------
 
 #include "renderer.hpp"
+#include "scene.hpp"
 
-Renderer::Renderer(unsigned w, unsigned h, std::string const &file)
-    : width_(w), height_(h), color_buffer_(w * h, Color{0.0, 0.0, 0.0}), filename_(file), ppm_(width_, height_)
+Renderer::Renderer(unsigned w, unsigned h, std::string const &file,Scene const& scene)
+    : width_(w), height_(h), color_buffer_(w * h, Color{0.0, 0.0, 0.0}), filename_(file), ppm_(width_, height_),scene_(scene)
 {
 }
 
-Ray raycast()
-{
-  Material m{{"red"},{1,0,0},{1,0,0},{1,0,0},1.0f};
-  std::shared_ptr<Material>materia =std::make_shared<Material>(m);
-  Box b{{"rbottom"},{materia},{-100,-80,-200},{100,80,-100}};
-  Light l{{"Sun"},{1000,700,0},{0.2f,0.2f,0.2f},100};
-  Camera camera{{"eye"},45.0f};
-  Render render{{"eye"},{"image.ppm"},480,320};
-  std::shared_ptr<Shape>bo=std::make_shared<Box>(b);
-  std::vector<std::shared_ptr<Shape>>box;
-  box.push_back(bo);
-  std::shared_ptr<Light>ligh=std::make_shared<Light>(l);
-  std::vector<std::shared_ptr<Light>>light;
-  light.push_back(ligh);
-  std::map<std::string,std::shared_ptr<Material>>material;
-  material.insert(std::make_pair("red",materia));
-  Scene scene{box,light,material,camera,{"white",{1,1,1}},render};
 
-  auto ndir = glm::normalize(scene.camera.dir);
-  return {scene.camera.eye, ndir};
-}
-Color trace(Ray const &ray)
+
+Ray Renderer::raycast(Scene const& scene)
 {
-  Material m{{"red"},{1,0,0},{1,0,0},{1,0,0},1.0f};
-  std::shared_ptr<Material>materia =std::make_shared<Material>(m);
-  Box b{{"rbottom"},{materia},{-100,-80,-200},{100,80,-100}};
-  Light l{{"Sun"},{1000,700,0},{0.2f,0.2f,0.2f},100};
-  Camera camera{{"eye"},45.0f};
-  Render render{{"eye"},{"image.ppm"},480,320};
-  std::shared_ptr<Shape>bo=std::make_shared<Box>(b);
-  std::vector<std::shared_ptr<Shape>>box;
-  box.push_back(bo);
-  std::shared_ptr<Light>ligh=std::make_shared<Light>(l);
-  std::vector<std::shared_ptr<Light>>light;
-  light.push_back(ligh);
-  std::map<std::string,std::shared_ptr<Material>>material;
-  material.insert(std::make_pair("red",materia));
-  Scene scene{box,light,material,camera,{"white",{1,1,1}},render};
-  
-  std::shared_ptr<Shape>closest_o=nullptr;
-  Hitpoint closest_t;
-  for (auto i: scene.shape_vec)
+
+  for (unsigned y = 0; y < height_; ++y)
   {
-    Hitpoint t = i->intersect(ray);
-    if(t.intersect)
+    for (unsigned x = 0; x < width_; ++x)
     {
-      std::cout<<"Hit";
-     
-    if (t.distance < closest_t.distance && t.intersect)
-    {
-      closest_t = t;
-      closest_o = i;
+      glm::vec3 origin = scene.camera.eye;
+      float dir_x = scene.camera.dir.x + x - (width_ * 0.5f);
+      float dir_y = scene.camera.dir.y + y - (height_ * 0.5f);
+      float dir_z = scene.camera.dir.z + (width_ / 2.0f) / tan((scene.camera.fovx / 2.0f) * M_PI / 180);
+      glm::vec3 direction{dir_x, dir_y, -dir_z};
+
+      glm::vec4 u = glm::vec4(glm::normalize(glm::cross(direction, scene.camera.up)), 0.0f);
+      glm::vec4 v = glm::vec4(glm::normalize(glm::cross({u.x, u.y, u.z}, direction)), 0.0f);
+      glm::mat4 c{u, v, glm::vec4{glm::normalize(-direction), 0}, glm::vec4{origin, 1}};
+      Ray ray{origin, glm::normalize(direction)};
+      glm::vec4 org = c * glm::vec4(ray.origin, 1.0f);
+      glm::vec4 dir = c * glm::vec4(ray.direction, 0.0f);
+      Ray c_ray{{org.x, org.y, org.z}, {dir.x, dir.y, dir.z}};
     }
   }
-  if (closest_o != nullptr)
-  {
-    return shade(ray,closest_t);
-  }
-  else
-  {
-    return scene.ambient.color;
-  }}
 }
-Color shade(Ray const &ray, Hitpoint t){
-  Material m{{"red"},{1,0,0},{1,0,0},{1,0,0},1.0f};
-  std::shared_ptr<Material>materia =std::make_shared<Material>(m);
-  Box b{{"rbottom"},{materia},{-100,-80,-200},{100,80,-100}};
-  Light l{{"Sun"},{1000,700,0},{0.2f,0.2f,0.2f},100};
-  Camera camera{{"eye"},45.0f};
-  Render render{{"eye"},{"image.ppm"},480,320};
-  std::shared_ptr<Shape>bo=std::make_shared<Box>(b);
-  std::vector<std::shared_ptr<Shape>>box;
-  box.push_back(bo);
-  std::shared_ptr<Light>ligh=std::make_shared<Light>(l);
-  std::vector<std::shared_ptr<Light>>light;
-  light.push_back(ligh);
-  std::map<std::string,std::shared_ptr<Material>>material;
-  material.insert(std::make_pair("red",materia));
-  Scene scene{box,light,material,camera,{"white",{1,1,1}},render};
+Color trace(Ray const &ray,Scene const& scene)
+{
+
+  std::shared_ptr<Shape> closest_o = nullptr;
+  Hitpoint closest_t;
+  for (auto i : scene.shape_vec)
+  {
+    Hitpoint t = i->intersect(ray);
+    if (t.intersect)
+    {
+      std::cout << "Hit";
+
+      if (t.distance < closest_t.distance && t.intersect)
+      {
+        closest_t = t;
+        closest_o = i;
+      }
+    }
+    if (closest_o != nullptr)
+    {
+      return shade(ray, closest_t,scene);
+    }
+    else
+    {
+      return scene.ambient.color;
+    }
+  }
+}
+Color shade(Ray const &ray, Hitpoint t,Scene const& scene)
+{
 
   auto scenelight = scene.light_vec[1].get();
   Ray shadow;
@@ -111,26 +88,10 @@ Color shade(Ray const &ray, Hitpoint t){
     return mka;
   }
 }
-void Renderer::render()
+void Renderer::render(Scene const& scene)
 {
-  std::cout<<"Hallo?";
-  Material m{{"red"},{1,0,0},{1,0,0},{1,0,0},1.0f};
-  std::shared_ptr<Material>materia =std::make_shared<Material>(m);
-  Box b{{"rbottom"},{materia},{-100,-80,-200},{100,80,-100}};
-  Light l{{"Sun"},{1000,700,0},{0.2f,0.2f,0.2f},100};
-  Camera camera{{"eye"},45.0f};
-  Render render{{"eye"},{"image.ppm"},480,320};
-  std::shared_ptr<Shape>bo=std::make_shared<Box>(b);
-  std::vector<std::shared_ptr<Shape>>box;
-  box.push_back(bo);
-  std::shared_ptr<Light>ligh=std::make_shared<Light>(l);
-  std::vector<std::shared_ptr<Light>>light;
-  light.push_back(ligh);
-  std::map<std::string,std::shared_ptr<Material>>material;
-  material.insert(std::make_pair("red",materia));
-  Scene scene{box,light,material,camera,{"white",{1,1,1}},render};
 
-  std::cout<<"starting to render";
+  std::cout << "starting to render";
   std::size_t const checker_pattern_size = 20;
 
   for (unsigned y = 0; y < height_; ++y)
@@ -138,8 +99,7 @@ void Renderer::render()
     for (unsigned x = 0; x < width_; ++x)
     {
       Pixel p(x, y);
-      p.color = trace(raycast());
-      //std::cout<<p.color.r;
+      p.color = trace(raycast(scene),scene);
       write(p);
     }
   }

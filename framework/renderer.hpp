@@ -18,14 +18,17 @@
 #include "shape.hpp"
 #include <string>
 #include <glm/glm.hpp>
+#include <map>
+#include <vector>
 
 class Renderer
 {
 public:
-  Renderer(unsigned w, unsigned h, std::string const& file);
+  Renderer(unsigned w, unsigned h, std::string const& file,Scene const& scene);
 
+  void render(Scene const& scene);
+  Ray raycast(Scene const& scene);
   
-  void render();
   void write(Pixel const& p);
 
   inline std::vector<Color> const& color_buffer() const
@@ -38,10 +41,10 @@ private:
   unsigned height_;
   std::vector<Color> color_buffer_;
   std::string filename_;
+  Scene scene_;
   PpmWriter ppm_;
 };
 
-Ray raycast();
-Color trace(Ray const& ray);
-Color shade(Ray const& r,Hitpoint t);
+Color trace(Ray const& ray,Scene const& scene);
+Color shade(Ray const& r,Hitpoint t,Scene const& scene);
 #endif // #ifndef BUW_RENDERER_HPP

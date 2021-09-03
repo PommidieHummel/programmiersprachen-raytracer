@@ -31,4 +31,5 @@ struct Scene
 
 Scene sdfReader(std::string const& sdfFile);
 
+
 #endif

@@ -12,7 +12,7 @@ Scene sdfReader(std::string const &sdfFile)
     input_file.open(sdfFile);
     if (input_file.is_open())
     {
-        std::cout << "Hallo bin offen"<<std::endl;
+        std::cout << "Hallo bin offen" << std::endl;
         while (getline(input_file, line))
         {
             std::istringstream string_stream(line);
@@ -45,9 +45,9 @@ Scene sdfReader(std::string const &sdfFile)
                     string_stream >> m;
 
                     //saving shared pointer of material in file in vector
-                    std::cout <<"\n ks.r: "<< ks.r;
+                    std::cout << "\n ks.r: " << ks.r;
                     Material material{name, {ka.r, ka.g, ka.b}, {ks.r, ks.g, ks.b}, {kd.r, kd.g, kd.b}, m};
-                    std::cout <<"\n mat name: "<< material.name << " ks.r: " << material.ka.r;
+                    std::cout << "\n mat name: " << material.name << " ks.r: " << material.ka.r;
                     std::shared_ptr<Material> mat = std::make_shared<Material>(material);
                     s.material_map.insert(std::make_pair(name, mat));
                 }
@@ -140,12 +140,12 @@ Scene sdfReader(std::string const &sdfFile)
                     string_stream >> fovx;
                     s.camera.name = cameraName;
                     s.camera.fovx = fovx;
-                    std::cout <<"\n camera name:"<< s.camera.name <<" "<< cameraName;
+                    std::cout << "\n camera name:" << s.camera.name << " " << cameraName;
                 }
             }
             else if ("render" == define)
             {
-                std::cout<<"\n starting to render"<<std::endl;
+                std::cout << "\n starting to render" << std::endl;
                 std::string camNameForRender;
                 std::string file;
                 unsigned xres;
@@ -160,13 +160,13 @@ Scene sdfReader(std::string const &sdfFile)
                 s.render.fileName = file;
                 s.render.xres = xres;
                 s.render.yres = yres;
-                std::cout <<"\n render camera name: "<< s.render.camName << s.render.fileName;
+                std::cout << "\n render camera name: " << s.render.camName << s.render.fileName;
             }
             //if (define == "transform")
             //{
             //    std::string objname >> define;
             //}
-            
+
             //shape -> box, sphere; light -> ambient; camera; render
         }
         input_file.close();
@@ -177,3 +177,4 @@ Scene sdfReader(std::string const &sdfFile)
     }
     return s;
 }
+

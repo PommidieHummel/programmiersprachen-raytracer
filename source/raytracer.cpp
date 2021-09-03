@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   //Test scene ende
   //Scene scene = sdfReader(scenefile);
   std::cout <<"\n Camera shit: "<< testScene.camera.name <<" "<< testScene.camera.fovx<<"\n renderer shit: "<<testScene.render.camName;
-  Renderer renderer{image_width, image_height, file};
+  Renderer renderer{image_width, image_height, file,testScene};
   renderer.render();
 
   Window window{{image_width, image_height}};
