@@ -12,7 +12,7 @@ Scene sdfReader(std::string const &sdfFile)
     input_file.open(sdfFile);
     if (input_file.is_open())
     {
-        std::cout << "Hallo bin offen";
+        std::cout << "Hallo bin offen"<<std::endl;
         while (getline(input_file, line))
         {
             std::istringstream string_stream(line);
@@ -143,8 +143,9 @@ Scene sdfReader(std::string const &sdfFile)
                     std::cout <<"\n camera name:"<< s.camera.name <<" "<< cameraName;
                 }
             }
-            if (define == "render")
+            else if ("render" == define)
             {
+                std::cout<<"\n starting to render"<<std::endl;
                 std::string camNameForRender;
                 std::string file;
                 unsigned xres;
