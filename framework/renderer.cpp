@@ -37,6 +37,7 @@ Ray Renderer::raycast(Scene const& scene)
       glm::vec4 org = c * glm::vec4(ray.origin, 1.0f);
       glm::vec4 dir = c * glm::vec4(ray.direction, 0.0f);
       Ray c_ray{{org.x, org.y, org.z}, {dir.x, dir.y, dir.z}};
+      return c_ray;
     }
   }
 }
@@ -84,8 +85,11 @@ Color shade(Ray const &ray, Hitpoint t,Scene const& scene)
     {
       return {0, 0, 0};
     }
-    Color mka = {Material->ka.r * scene.light_vec[1].get()->brightness, Material->ka.g * scene.light_vec[1].get()->brightness, Material->ka.b * scene.light_vec[1].get()->brightness};
-    return mka;
+    else{
+      Color mka = {Material->ka.r * scene.light_vec[1].get()->brightness, Material->ka.g * scene.light_vec[1].get()->brightness, Material->ka.b * scene.light_vec[1].get()->brightness};
+      return mka;
+    }
+    
   }
 }
 void Renderer::render(Scene const& scene)
