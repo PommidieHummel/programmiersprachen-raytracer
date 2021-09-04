@@ -15,29 +15,16 @@ Renderer::Renderer(unsigned w, unsigned h, std::string const &file, Scene const 
 {
 }
 
-Ray Renderer::raycast(Scene const &scene)
+Ray Renderer::raycast(Scene const &scene,Pixel const& p)
 {
+  float x = (((float)p.x / (float)width_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
+  float y = (((float)p.y / (float)height_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
 
-  for (unsigned y = 0; y < height_; ++y)
-  {
-    for (unsigned x = 0; x < width_; ++x)
-    {
-      glm::vec3 origin = scene.camera.eye;
-      float dir_x = scene.camera.dir.x + x - (width_ * 0.5f);
-      float dir_y = scene.camera.dir.y + y - (height_ * 0.5f);
-      float dir_z = scene.camera.dir.z + (width_ / 2.0f) / tan((scene.camera.fovx / 2.0f) * M_PI / 180);
-      glm::vec3 direction{dir_x, dir_y, dir_z};
-
-      glm::vec4 u = glm::vec4(glm::normalize(glm::cross(direction, scene.camera.up)), 0.0f);
-      glm::vec4 v = glm::vec4(glm::normalize(glm::cross({u.x, u.y, u.z}, direction)), 0.0f);
-      glm::mat4 c{u, v, glm::vec4{glm::normalize(-direction), 0}, glm::vec4{origin, 1}};
-      Ray ray{origin, glm::normalize(direction)};
-      glm::vec4 org = c * glm::vec4(ray.origin, 1.0f);
-      glm::vec4 dir = c * glm::vec4(ray.direction, 0.0f);
-      Ray c_ray{{org.x, org.y, org.z}, {dir.x, dir.y, dir.z}};
-      return c_ray;
-    }
-  }
+  glm::vec3 rightVec = glm::cross(scene.camera.dir, scene.camera.up);
+  glm::vec3 direction = glm::normalize(x * rightVec + y * scene.camera.up + scene.camera.dir);
+  std::cout<<direction.x<<" "<<direction.y<<" "<<direction.z<<" ";
+  return Ray{scene.camera.eye,direction};
+  
 }
 Color trace(Ray const &ray, Scene const &scene)
 {
@@ -69,13 +56,13 @@ Color shade(Ray const &ray, Hitpoint t, Scene const &scene)
   Ray shadow;
   std::map<std::string, std::shared_ptr<Material>>::const_iterator it = scene.material_map.begin();
   auto Material = it->second;
-  shadow.direction = glm::normalize(scene.light_vec[0]->pos -t.hitpoint);
-  for (auto i: scene.shape_vec)
+  shadow.direction = glm::normalize(scene.light_vec[0]->pos - t.hitpoint);
+  for (auto i : scene.shape_vec)
   {
     auto Hit = i->intersect(shadow);
     if (Hit.intersect)
     {
-      return {0,0,0};
+      return {0, 0, 0};
     }
     else
     {
@@ -95,7 +82,7 @@ void Renderer::render(Scene const &scene)
     for (unsigned x = 0; x < width_; ++x)
     {
       Pixel p(x, y);
-      p.color = trace(raycast(scene), scene);
+      p.color = trace(raycast(scene,p), scene);
       write(p);
     }
   }

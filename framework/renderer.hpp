@@ -27,7 +27,7 @@ public:
   Renderer(unsigned w, unsigned h, std::string const& file, Scene const& scene);
 
   void render(Scene const& scene);
-  Ray raycast(Scene const& scene);
+  Ray raycast(Scene const& scene,Pixel const& p);
   
   void write(Pixel const& p);
 
