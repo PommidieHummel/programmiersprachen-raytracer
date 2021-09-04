@@ -10,14 +10,12 @@
 #include "renderer.hpp"
 #include "scene.hpp"
 
-Renderer::Renderer(unsigned w, unsigned h, std::string const &file,Scene const& scene)
-    : width_(w), height_(h), color_buffer_(w * h, Color{0.0, 0.0, 0.0}), filename_(file), ppm_(width_, height_),scene_(scene)
+Renderer::Renderer(unsigned w, unsigned h, std::string const &file, Scene const &scene)
+    : width_(w), height_(h), color_buffer_(w * h, Color{0.0, 0.0, 0.0}), filename_(file), ppm_(width_, height_), scene_(scene)
 {
 }
 
-
-
-Ray Renderer::raycast(Scene const& scene)
+Ray Renderer::raycast(Scene const &scene)
 {
 
   for (unsigned y = 0; y < height_; ++y)
@@ -28,7 +26,7 @@ Ray Renderer::raycast(Scene const& scene)
       float dir_x = scene.camera.dir.x + x - (width_ * 0.5f);
       float dir_y = scene.camera.dir.y + y - (height_ * 0.5f);
       float dir_z = scene.camera.dir.z + (width_ / 2.0f) / tan((scene.camera.fovx / 2.0f) * M_PI / 180);
-      glm::vec3 direction{dir_x, dir_y, -dir_z};
+      glm::vec3 direction{dir_x, dir_y, dir_z};
 
       glm::vec4 u = glm::vec4(glm::normalize(glm::cross(direction, scene.camera.up)), 0.0f);
       glm::vec4 v = glm::vec4(glm::normalize(glm::cross({u.x, u.y, u.z}, direction)), 0.0f);
@@ -41,7 +39,7 @@ Ray Renderer::raycast(Scene const& scene)
     }
   }
 }
-Color trace(Ray const &ray,Scene const& scene)
+Color trace(Ray const &ray, Scene const &scene)
 {
 
   std::shared_ptr<Shape> closest_o = nullptr;
@@ -49,19 +47,16 @@ Color trace(Ray const &ray,Scene const& scene)
   for (auto i : scene.shape_vec)
   {
     Hitpoint t = i->intersect(ray);
-    if (t.intersect)
+    if (t.intersect == true)
     {
-      std::cout << "Hit";
-
-      if (t.distance < closest_t.distance && t.intersect)
-      {
-        closest_t = t;
-        closest_o = i;
-      }
+      std::cout << "Hit ";
+      closest_t = t;
+      closest_o = i;
     }
     if (closest_o != nullptr)
     {
-      return shade(ray, closest_t,scene);
+      std::cout << "hallo";
+      return shade(ray, closest_t, scene);
     }
     else
     {
@@ -69,30 +64,27 @@ Color trace(Ray const &ray,Scene const& scene)
     }
   }
 }
-Color shade(Ray const &ray, Hitpoint t,Scene const& scene)
+Color shade(Ray const &ray, Hitpoint t, Scene const &scene)
 {
-
-  auto scenelight = scene.light_vec[1].get();
   Ray shadow;
   std::map<std::string, std::shared_ptr<Material>>::const_iterator it = scene.material_map.begin();
   auto Material = it->second;
-  shadow.direction = scenelight->pos - t.hitpoint;
-  for (int i; scene.shape_vec.size(); i++)
+  shadow.direction = glm::normalize(scene.light_vec[0]->pos -t.hitpoint);
+  for (auto i: scene.shape_vec)
   {
-    auto object = scene.shape_vec[i].get();
-    auto Hit = object->intersect(shadow);
+    auto Hit = i->intersect(shadow);
     if (Hit.intersect)
     {
-      return {0, 0, 0};
+      return {0,0,0};
     }
-    else{
-      Color mka = {Material->ka.r * scene.light_vec[1].get()->brightness, Material->ka.g * scene.light_vec[1].get()->brightness, Material->ka.b * scene.light_vec[1].get()->brightness};
+    else
+    {
+      Color mka = {Material->ka.r * scene.light_vec[0]->brightness, Material->ka.g * scene.light_vec[0]->brightness, Material->ka.b * scene.light_vec[0]->brightness};
       return mka;
     }
-    
   }
 }
-void Renderer::render(Scene const& scene)
+void Renderer::render(Scene const &scene)
 {
 
   std::cout << "starting to render";
@@ -103,7 +95,7 @@ void Renderer::render(Scene const& scene)
     for (unsigned x = 0; x < width_; ++x)
     {
       Pixel p(x, y);
-      p.color = trace(raycast(scene),scene);
+      p.color = trace(raycast(scene), scene);
       write(p);
     }
   }

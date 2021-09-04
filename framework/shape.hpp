@@ -27,7 +27,7 @@ class Shape
     virtual Hitpoint intersect (Ray const& ray)const =0;
     Ray transformRay(glm::mat4 const& mat, Ray const& ray) const;
 
-    protected:
+    public:
     std::string name_;
     std::shared_ptr<Material const> material_;
     glm::mat4 world_transformation_;

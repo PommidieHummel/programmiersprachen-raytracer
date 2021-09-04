@@ -21,11 +21,11 @@ int main(int argc, char* argv[])
   //Test scene ohne Parser
   Material m{{"red"},{1,0,0},{1,0,0},{1,0,0},1.0f};
   std::shared_ptr<Material>materia =std::make_shared<Material>(m);
-  Box b{{"rbottom"},{materia},{-100,-80,-200},{100,80,-100}};
+  Sphere b{{"rbottom"},{materia},{12,12,0},15};
   Light l{{"Sun"},{1000,700,0},{0.2f,0.2f,0.2f},100};
   Camera camera{{"eye"},45.0f};
   Render render{{"eye"},{"image.ppm"},480,320};
-  std::shared_ptr<Shape>bo=std::make_shared<Box>(b);
+  std::shared_ptr<Shape>bo=std::make_shared<Sphere>(b);
   std::vector<std::shared_ptr<Shape>>box;
   box.push_back(bo);
   std::shared_ptr<Light>ligh=std::make_shared<Light>(l);
