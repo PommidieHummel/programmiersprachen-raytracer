@@ -15,16 +15,14 @@ Renderer::Renderer(unsigned w, unsigned h, std::string const &file, Scene const 
 {
 }
 
-Ray Renderer::raycast(Scene const &scene,Pixel const& p)
+Ray Renderer::raycast(Scene const &scene, Pixel const &p)
 {
   float x = (((float)p.x / (float)width_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
   float y = (((float)p.y / (float)height_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
 
   glm::vec3 rightVec = glm::cross(scene.camera.dir, scene.camera.up);
   glm::vec3 direction = glm::normalize(x * rightVec + y * scene.camera.up + scene.camera.dir);
-  std::cout<<direction.x<<" "<<direction.y<<" "<<direction.z<<" ";
-  return Ray{scene.camera.eye,direction};
-  
+  return Ray{scene.camera.eye, direction};
 }
 Color trace(Ray const &ray, Scene const &scene)
 {
@@ -36,39 +34,77 @@ Color trace(Ray const &ray, Scene const &scene)
     Hitpoint t = i->intersect(ray);
     if (t.intersect == true)
     {
-      std::cout << "Hit ";
+
       closest_t = t;
       closest_o = i;
     }
-    if (closest_o != nullptr)
-    {
-      std::cout << "hallo";
-      return shade(ray, closest_t, scene);
-    }
-    else
-    {
-      return scene.ambient.color;
-    }
+  }
+  if (closest_o != nullptr)
+  {
+    return shade(ray, closest_t, scene, closest_o);
+  }
+  else
+  {
+    return scene.ambient.color;
   }
 }
-Color shade(Ray const &ray, Hitpoint t, Scene const &scene)
+
+Color toneMap(Color const &col)
 {
-  Ray shadow;
-  std::map<std::string, std::shared_ptr<Material>>::const_iterator it = scene.material_map.begin();
-  auto Material = it->second;
-  shadow.direction = glm::normalize(scene.light_vec[0]->pos - t.hitpoint);
+  float r = (col.r / (col.r + 1.0f));
+  float g = (col.g / (col.g + 1.0f));
+  float b = (col.b / (col.b + 1.0f));
+  return {r, g, b};
+}
+Color shade(Ray const &ray, Hitpoint t, Scene const &scene, std::shared_ptr<Shape> shape)
+{
+  Color theShade{0.0f, 0.0f, 0.0f};
   for (auto i : scene.shape_vec)
   {
-    auto Hit = i->intersect(shadow);
-    if (Hit.intersect)
-    {
-      return {0, 0, 0};
-    }
-    else
-    {
-      Color mka = {Material->ka.r * scene.light_vec[0]->brightness, Material->ka.g * scene.light_vec[0]->brightness, Material->ka.b * scene.light_vec[0]->brightness};
-      return mka;
-    }
+    Color ambient = ambientLight(scene, shape);
+    Color difuss = diffuseLight(scene, shape, t);
+    Color spec = specularLight(scene, shape, t);
+    theShade = ambient + difuss + spec;
+
+    return theShade;
+  };
+}
+
+Color ambientLight(Scene const &scene, std::shared_ptr<Shape> shape)
+{
+  Color kaColor = shape->material_->ka;
+  Color ambColor = scene.ambient.color;
+  return (kaColor * ambColor);
+}
+Color diffuseLight(Scene const &scene, std::shared_ptr<Shape> shape, Hitpoint const &hitpoint)
+{
+  for (auto i : scene.light_vec)
+  {
+    bool firsthit = false;
+    glm::vec3 LightV{i->pos - hitpoint.hitpoint};
+    Ray rayLight{hitpoint.hitpoint + 0.1f * hitpoint.normalized, glm::normalize(LightV)};
+
+    Color in = i->color * i->brightness;
+    Color kdColor = shape->material_->kd;
+    float phi = -(glm::dot(hitpoint.normalized, glm::normalize(LightV)));
+    return ((in * kdColor) * phi);
+  }
+}
+Color specularLight(Scene const &scene, std::shared_ptr<Shape> shape, Hitpoint const &hitpoint)
+{
+  for (auto i : scene.light_vec)
+  {
+    bool firsthit = false;
+    glm::vec3 LightV{i->pos - hitpoint.hitpoint};
+    Ray rayLight{hitpoint.hitpoint + 0.1f * hitpoint.normalized, glm::normalize(LightV)};
+    glm::vec3 v = glm::normalize(scene.camera.eye - hitpoint.hitpoint);
+    float r = 2 * glm::dot(hitpoint.normalized, glm::normalize(LightV) * hitpoint.normalized - glm::normalize(LightV));
+    float O = glm::dot(glm::vec3(r), v);
+    Color ksColor = shape->material_->ks;
+    Color in = i->color * i->brightness;
+    float mFaktor = shape->material_->m;
+    float faktor = (mFaktor + 2 / 2 * M_PI);
+    return (((in * ksColor) * faktor) * pow(O, mFaktor));
   }
 }
 void Renderer::render(Scene const &scene)
@@ -82,7 +118,7 @@ void Renderer::render(Scene const &scene)
     for (unsigned x = 0; x < width_; ++x)
     {
       Pixel p(x, y);
-      p.color = trace(raycast(scene,p), scene);
+      p.color = toneMap(trace(raycast(scene, p), scene));
       write(p);
     }
   }

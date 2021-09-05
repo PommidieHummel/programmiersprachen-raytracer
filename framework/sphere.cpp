@@ -36,6 +36,7 @@ Hitpoint Sphere::intersect(Ray const& r)const{
     float distance = 1.0f;
     Ray tranfsRay{transformRay(world_transformation_inv_, r)};            //use inverse transfmatrix on the ray
     bool hit = glm::intersectRaySphere(r.origin,glm::normalize(r.direction),ctr_,pow(r_,2),distance);
+    glm::vec3 normal =((r.origin+ distance*r.direction)-ctr_);
     Hitpoint x {hit,distance,name_,material_,r.origin+ distance*r.direction, r.direction};
     return x;
 

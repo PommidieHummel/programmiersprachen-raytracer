@@ -34,6 +34,7 @@ Hitpoint Box::intersect(Ray const &r) const
 {
     //Ray transfRay{ transformRay(world_transformation_inv_, r) };        //use inverse transfmatrix on the ray
     bool hit = false;
+    glm::vec3 normal;
     float closest_t = 0.0f;
     auto px1 = min_.x;
     auto t_dist = (px1 - r.origin.x) / r.direction.x;
@@ -42,6 +43,7 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.y <= py && py <= max_.y && min_.z <= pz && pz <= max_.z)
     {
         hit = true;
+        normal={-1,0,0};
         closest_t = t_dist;
     }
     auto px2 = max_.x;
@@ -51,6 +53,7 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.y <= py && py <= max_.y && min_.z <= pz && pz <= max_.z)
     {
         hit = true;
+        normal={1,0,0};
         if (t_dist < closest_t)
         {
             auto closest_t = t_dist;
@@ -63,6 +66,7 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.x <= px && px <= max_.x && min_.z <= pz && pz <= max_.z)
     {
         hit = true;
+        normal={0,-1,0};
         if (t_dist < closest_t)
         {
             auto closest_t = t_dist;
@@ -75,6 +79,7 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.x <= px && px <= max_.x && min_.z <= pz && pz <= max_.z)
     {
         hit = true;
+        normal={0,1,0};
         if (t_dist < closest_t)
         {
             auto closest_t = t_dist;
@@ -87,6 +92,7 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.x <= px && px <= max_.x && min_.y <= py && py <= max_.y)
     {
         hit = true;
+        normal={0,0,-1};
         if (t_dist < closest_t)
         {
             auto closest_t = t_dist;
@@ -99,12 +105,14 @@ Hitpoint Box::intersect(Ray const &r) const
     if (min_.x <= px && px <= max_.x && min_.y <= py && py <= max_.y)
     {
         hit = true;
+        normal={0,0,1};
         if (t_dist < closest_t)
         {
             auto closest_t = t_dist;
         }
     }
-    Hitpoint x{hit, closest_t, name_, material_, r.origin + closest_t * r.direction};
+
+    Hitpoint x{hit, closest_t, name_, material_, r.origin + closest_t * r.direction,normal,r.direction};
     return x;
 }
 

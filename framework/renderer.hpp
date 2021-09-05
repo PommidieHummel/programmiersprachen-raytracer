@@ -45,6 +45,10 @@ private:
   PpmWriter ppm_;
 };
 
+Color ambientLight(Scene const& scene, std::shared_ptr<Shape> shape);
+Color diffuseLight(Scene const& scene,std::shared_ptr<Shape> shape,Hitpoint const& hitpoint);
+Color specularLight(Scene const& scene,std::shared_ptr<Shape> shape,Hitpoint const& hitpoint);
 Color trace(Ray const& ray,Scene const& scene);
-Color shade(Ray const& r,Hitpoint t,Scene const& scene);
+Color shade(Ray const& r,Hitpoint t,Scene const& scene,std::shared_ptr<Shape>shade);
+Color toneMap(Color const& col);
 #endif // #ifndef BUW_RENDERER_HPP
