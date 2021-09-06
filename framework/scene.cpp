@@ -166,9 +166,9 @@ Scene sdfReader(std::string const &sdfFile)
             {
                 std::string objectName;
                 std::string transformType;
-                unsigned parameter1;
-                unsigned parameter2;
-                unsigned parameter3;
+                float parameter1;
+                float parameter2;
+                float parameter3;
 
                 string_stream >> objectName;
                 string_stream >> transformType;
@@ -178,12 +178,12 @@ Scene sdfReader(std::string const &sdfFile)
 
                 if (transformType == "rotate")
                 {
-                    unsigned parameter4;
+                    float parameter4;
 
                     string_stream >> parameter4;
 
                     
-                    rotate(objectName, parameter1, parameter2, parameter3, parameter4);
+                    //adjustWorldMat(rotate(objectName, parameter1, parameter2, parameter3, parameter4));
 
                 }
             }

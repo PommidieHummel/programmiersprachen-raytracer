@@ -26,6 +26,9 @@ class Shape
     virtual std::ostream& print(std::ostream& os)const;
     virtual Hitpoint intersect (Ray const& ray)const =0;
     Ray transformRay(glm::mat4 const& mat, Ray const& ray) const;
+    void adjustWorldMat(glm::mat4 const& translMat, glm::mat4 const& rotMat, glm::mat4 const& scaleMat);
+    void adjustInvWorldMat();
+
 
     public:
     std::string name_;
