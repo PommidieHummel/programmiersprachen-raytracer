@@ -17,11 +17,11 @@ Renderer::Renderer(unsigned w, unsigned h, std::string const &file, Scene const 
 
 Ray Renderer::raycast(Scene const &scene, Pixel const &p)
 {
-  float x = (((float)p.x / (float)width_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
-  float y = (((float)p.y / (float)height_ - 0.5f) * 2.f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
+  float x = (((float)p.x / (float)width_ - 0.5f) * 2.0f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
+  float y = (((float)p.y / (float)height_ - 0.5f) * 2.0f * (float)std::tan(scene.camera.fovx / 180.0f * M_PI));
 
-  glm::vec3 rightVec = glm::cross(scene.camera.dir, scene.camera.up);
-  glm::vec3 direction = glm::normalize(x * rightVec + y * scene.camera.up + scene.camera.dir);
+  glm::vec3 Vec1 = glm::cross(scene.camera.dir, scene.camera.up);
+  glm::vec3 direction = glm::normalize(x * Vec1 + y * scene.camera.up + scene.camera.dir);
   return Ray{scene.camera.eye, direction};
 }
 Color trace(Ray const &ray, Scene const &scene)
@@ -78,34 +78,37 @@ Color ambientLight(Scene const &scene, std::shared_ptr<Shape> shape)
 }
 Color diffuseLight(Scene const &scene, std::shared_ptr<Shape> shape, Hitpoint const &hitpoint)
 {
+  Color end{0,0,0};
   for (auto i : scene.light_vec)
   {
-    bool firsthit = false;
+
     glm::vec3 LightV{i->pos - hitpoint.hitpoint};
     Ray rayLight{hitpoint.hitpoint + 0.1f * hitpoint.normalized, glm::normalize(LightV)};
-
     Color in = i->color * i->brightness;
     Color kdColor = shape->material_->kd;
     float phi = -(glm::dot(hitpoint.normalized, glm::normalize(LightV)));
-    return ((in * kdColor) * phi);
+    end=end+(in * kdColor) * phi;
+    }
+    return end;
   }
-}
+
 Color specularLight(Scene const &scene, std::shared_ptr<Shape> shape, Hitpoint const &hitpoint)
 {
-  for (auto i : scene.light_vec)
-  {
-    bool firsthit = false;
-    glm::vec3 LightV{i->pos - hitpoint.hitpoint};
-    Ray rayLight{hitpoint.hitpoint + 0.1f * hitpoint.normalized, glm::normalize(LightV)};
+  Color end{0,0,0};
+  for (auto i : scene.light_vec){
+  glm::vec3 LightV{i->pos - hitpoint.hitpoint};
+  Ray rayLight{hitpoint.hitpoint + 0.1f * hitpoint.normalized, glm::normalize(LightV)};
     glm::vec3 v = glm::normalize(scene.camera.eye - hitpoint.hitpoint);
-    float r = 2 * glm::dot(hitpoint.normalized, glm::normalize(LightV) * hitpoint.normalized - glm::normalize(LightV));
+    float r = 2 * (glm::dot(hitpoint.normalized, glm::normalize(LightV) * hitpoint.normalized - glm::normalize(LightV)));
     float O = glm::dot(glm::vec3(r), v);
     Color ksColor = shape->material_->ks;
     Color in = i->color * i->brightness;
     float mFaktor = shape->material_->m;
-    float faktor = (mFaktor + 2 / 2 * M_PI);
-    return (((in * ksColor) * faktor) * pow(O, mFaktor));
-  }
+    float faktor = ((mFaktor + 2) / 2 * M_PI);
+    end=end+ (((in * ksColor) * faktor) * pow(O, mFaktor));
+    
+}
+return end;
 }
 void Renderer::render(Scene const &scene)
 {
