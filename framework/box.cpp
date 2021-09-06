@@ -35,84 +35,87 @@ Hitpoint Box::intersect(Ray const &r) const
     //Ray transfRay{ transformRay(world_transformation_inv_, r) };        //use inverse transfmatrix on the ray
     bool hit = false;
     glm::vec3 normal;
-    float closest_t = 0.0f;
-    auto px1 = min_.x;
-    auto t_dist = (px1 - r.origin.x) / r.direction.x;
-    auto py = (r.origin.y) + t_dist + r.direction.y;
-    auto pz = (r.origin.z) + t_dist + r.direction.z;
-    if (min_.y <= py && py <= max_.y && min_.z <= pz && pz <= max_.z)
+    float closest_t=10000.0f;
+    glm::vec3 hitpoint;
+    
+    auto t_minDist_x = (min_.x - r.origin.x) / r.direction.x;
+    auto t_minDist_y = (min_.y - r.origin.y) / r.direction.y;
+    auto t_minDist_z = (min_.z - r.origin.z) / r.direction.z;
+    auto t_maxDist_x = (max_.x - r.origin.x) / r.direction.x;
+    auto t_maxDist_y = (max_.y - r.origin.y) / r.direction.y;
+    auto t_maxDist_z = (max_.z - r.origin.z) / r.direction.z;
+    glm::vec3 py_min = r.origin + t_minDist_y * r.direction;
+    glm::vec3 py_max = r.origin + t_maxDist_y * r.direction;
+    glm::vec3 pz_min = r.origin + t_minDist_z * r.direction;
+    glm::vec3 pz_max = r.origin + t_maxDist_z * r.direction;
+    glm::vec3 px_min = r.origin + t_minDist_x * r.direction;
+    glm::vec3 px_max = r.origin + t_maxDist_x * r.direction;
+    
+
+
+
+    if (px_min.y <= max_.y && px_min.y >= min_.y && px_min.z <= max_.z && min_.z >= px_min.z)
     {
         hit = true;
         normal={-1,0,0};
-        closest_t = t_dist;
+        hitpoint =px_min;
+        closest_t = t_minDist_x;
     }
-    auto px2 = max_.x;
-    t_dist = (px2 - r.origin.x) / r.direction.x;
-    py = (r.origin.y) + t_dist + r.direction.y;
-    pz = (r.origin.z) + t_dist + r.direction.z;
-    if (min_.y <= py && py <= max_.y && min_.z <= pz && pz <= max_.z)
+    if (px_max.y <= max_.y && min_.y <= px_max.y && px_max.z <= max_.z && min_.z <= px_max.z)
     {
         hit = true;
         normal={1,0,0};
-        if (t_dist < closest_t)
+        if (t_maxDist_x < closest_t)
         {
-            auto closest_t = t_dist;
-        }
-    }
-    auto py1 = min_.y;
-    t_dist = (py1 - r.origin.y) / r.direction.y;
-    auto px = (r.origin.x) + t_dist + r.direction.x;
-    pz = (r.origin.z) + t_dist + r.direction.z;
-    if (min_.x <= px && px <= max_.x && min_.z <= pz && pz <= max_.z)
-    {
-        hit = true;
-        normal={0,-1,0};
-        if (t_dist < closest_t)
-        {
-            auto closest_t = t_dist;
-        }
-    }
-    auto py2 = max_.y;
-    t_dist = (py2 - r.origin.y) / r.direction.y;
-    px = (r.origin.x) + t_dist + r.direction.x;
-    pz = (r.origin.z) + t_dist + r.direction.z;
-    if (min_.x <= px && px <= max_.x && min_.z <= pz && pz <= max_.z)
-    {
-        hit = true;
-        normal={0,1,0};
-        if (t_dist < closest_t)
-        {
-            auto closest_t = t_dist;
-        }
-    }
-    auto pz1 = min_.z;
-    t_dist = (pz1 - r.origin.z) / r.direction.z;
-    px = (r.origin.x) + t_dist + r.direction.x;
-    py = (r.origin.y) + t_dist + r.direction.y;
-    if (min_.x <= px && px <= max_.x && min_.y <= py && py <= max_.y)
-    {
-        hit = true;
-        normal={0,0,-1};
-        if (t_dist < closest_t)
-        {
-            auto closest_t = t_dist;
-        }
-    }
-    auto pz2 = max_.z;
-    t_dist = (pz2 - r.origin.z) / r.direction.z;
-    px = (r.origin.x) + t_dist + r.direction.x;
-    py = (r.origin.y) + t_dist + r.direction.y;
-    if (min_.x <= px && px <= max_.x && min_.y <= py && py <= max_.y)
-    {
-        hit = true;
-        normal={0,0,1};
-        if (t_dist < closest_t)
-        {
-            auto closest_t = t_dist;
+            hitpoint =px_max;
+            closest_t = t_maxDist_x;
         }
     }
 
-    Hitpoint x{hit, closest_t, name_, material_, r.origin + closest_t * r.direction,normal,r.direction};
+    if (py_min.x <= max_.x && min_.x<= py_min.x && py_min.z <= max_.z && min_.z <= py_min.z)
+    {
+
+        hit = true;
+        normal={0,-1,0};
+        if (t_minDist_y < closest_t)
+        {
+            hitpoint =py_min;
+            closest_t = t_minDist_y;
+        }
+    }
+    if (py_max.x <= max_.x && min_.x<= py_max.x && py_max.z <= max_.z && min_.z <= py_max.z)
+    {
+        hit = true;
+        normal={0,1,0};
+        if (t_maxDist_y < closest_t)
+        {
+            hitpoint =py_max;
+            closest_t = t_maxDist_y;
+        }
+    }
+    if (pz_min.x <= max_.x && min_.x<= pz_min.x && pz_min.y <= max_.y && min_.y <= pz_min.y)
+    {
+        hit = true;
+        normal={0,0,-1};
+        if (t_minDist_z < closest_t)
+        {
+            hitpoint =pz_min;
+            closest_t = t_minDist_z;
+        }
+    }
+    if (pz_max.x <= max_.x && min_.x<= pz_max.x && pz_max.y <= max_.y && min_.y <= pz_max.y)
+    {
+
+        hit = true;
+        normal={0.0f,0.0f,1.0f};
+        if (t_maxDist_z < closest_t)
+        {
+            hitpoint =pz_max;
+            closest_t = t_minDist_z;
+        }
+    }
+
+    Hitpoint x{hit, closest_t, name_, material_,hitpoint,normal,r.direction};
     return x;
 }
 
