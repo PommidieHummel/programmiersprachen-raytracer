@@ -162,10 +162,31 @@ Scene sdfReader(std::string const &sdfFile)
                 s.render.yres = yres;
                 std::cout << "\n render camera name: " << s.render.camName << s.render.fileName;
             }
-            //if (define == "transform")
-            //{
-            //    std::string objname >> define;
-            //}
+            if (define == "transform")
+            {
+                std::string objectName;
+                std::string transformType;
+                unsigned parameter1;
+                unsigned parameter2;
+                unsigned parameter3;
+
+                string_stream >> objectName;
+                string_stream >> transformType;
+                string_stream >> parameter1;
+                string_stream >> parameter2;
+                string_stream >> parameter3;
+
+                if (transformType == "rotate")
+                {
+                    unsigned parameter4;
+
+                    string_stream >> parameter4;
+
+                    
+                    rotate(objectName, parameter1, parameter2, parameter3, parameter4);
+
+                }
+            }
 
             //shape -> box, sphere; light -> ambient; camera; render
         }
