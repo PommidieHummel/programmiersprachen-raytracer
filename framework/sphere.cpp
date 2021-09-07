@@ -40,7 +40,12 @@ Hitpoint Sphere::intersect(Ray const& r)const{
     bool hit = glm::intersectRaySphere(transfRay.origin,normdir,ctr_,pow(r_,2),distance);
     glm::vec3 hitpoint = transfRay.origin+ (distance* transfRay.direction);
     glm::vec3 normal =glm::normalize((hitpoint)-ctr_);
-    Hitpoint x {hit,distance,name_,material_,hitpoint,normal, transfRay.direction};
+
+    glm::mat4 transposeMat = glm::transpose(world_transformation_inv_);      // (winv^-1)^T, für rücktransformation der normalen!
+    glm::vec4 v4norm = { normal.x, normal.y, normal.z, 0.f };                     //vec3 zu vec4 für berechnung mit mat4 !
+    glm::vec3 normtransposeMat{ transposeMat * v4norm };                          // (winv^-1)^T * v4norm -> vec3 und...
+    normal = glm::normalize(normtransposeMat);                                    // ...noch normalisieren
+    Hitpoint x{ hit,distance,name_,material_,hitpoint,normal, transfRay.direction };
     return x;
 
 }

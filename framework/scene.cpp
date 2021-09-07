@@ -55,7 +55,6 @@ Scene sdfReader(std::string const &sdfFile)
                 }
                 if (ident == "shape")
                 {
-                    i += 1;
                     std::string sident;
                     string_stream >> sident;
                     if (sident == "box")
@@ -100,6 +99,7 @@ Scene sdfReader(std::string const &sdfFile)
                         s.shape_vec.push_back(x);
                         object_map[sphereName] = i;
                     }
+                    i += 1;
                 }
                 if (ident == "light")
                 {
@@ -181,10 +181,11 @@ Scene sdfReader(std::string const &sdfFile)
                 string_stream >> parameter2;
                 string_stream >> parameter3;
 
-                int index_of_name = object_map.find(objectName)->second;
+                int index_of_name = object_map.find(objectName)->second; //gibt int "index" aus
 
                 if (transformType == "translate")
                 {
+                   //index_of_name = 1
                    s.shape_vec[index_of_name]->translate(parameter1, parameter2, parameter3);
                 }
 
@@ -201,7 +202,7 @@ Scene sdfReader(std::string const &sdfFile)
 
                 }
                 s.shape_vec[index_of_name]->adjustWorldMat();
-            
+                s.shape_vec[index_of_name]->adjustInvWorldMat();
             }
 
             //shape -> box, sphere; light -> ambient; camera; render

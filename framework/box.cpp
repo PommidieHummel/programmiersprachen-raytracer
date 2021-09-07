@@ -30,9 +30,9 @@ float Box::volum() const
     auto c = max_.z - min_.z;
     return a * b * c;
 }
-Hitpoint Box::intersect(Ray const &r) const
+Hitpoint Box::intersect(Ray const &ray) const
 {
-    //Ray transfRay{ transformRay(world_transformation_inv_, r) };        //use inverse transfmatrix on the ray
+    Ray r{ transformRay(world_transformation_inv_, ray) };        // nach r umbenannt der faulheit wegen x), übergabeparameter ist nun ray
     bool hit = false;
     glm::vec3 normal;
     float closest_t=10000.0f;
@@ -114,7 +114,10 @@ Hitpoint Box::intersect(Ray const &r) const
             closest_t = t_minDist_z;
         }
     }
-
+    glm::mat4 transposeMat = glm::transpose(world_transformation_inv_);      // (winv^-1)^T, für rücktransformation der normalen!
+    glm::vec4 v4norm = { normal.x, normal.y, normal.z, 0.f };                     //vec3 zu vec4 für berechnung mit mat4 !
+    glm::vec3 normtransposeMat{ transposeMat * v4norm };                          // (winv^-1)^T * v4norm -> vec3 und...
+    normal = glm::normalize(normtransposeMat);                                    // ...noch normalisieren
     Hitpoint x{hit, closest_t, name_, material_,hitpoint,normal,r.direction};
     return x;
 }
