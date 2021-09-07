@@ -8,6 +8,8 @@ Scene sdfReader(std::string const &sdfFile)
     std::string line;
     std::string ident;
     Scene s;
+    std::map<std::string, int> object_map;
+    int i = 0;
 
     input_file.open(sdfFile);
     if (input_file.is_open())
@@ -53,6 +55,7 @@ Scene sdfReader(std::string const &sdfFile)
                 }
                 if (ident == "shape")
                 {
+                    i += 1;
                     std::string sident;
                     string_stream >> sident;
                     if (sident == "box")
@@ -75,6 +78,7 @@ Scene sdfReader(std::string const &sdfFile)
                         Box box{boxName, material->second, min, max};
                         std::shared_ptr<Shape> x = std::make_shared<Box>(box);
                         s.shape_vec.push_back(x);
+                        object_map[boxName] = i;
                     }
                     if (sident == "sphere")
                     {
@@ -94,6 +98,7 @@ Scene sdfReader(std::string const &sdfFile)
                         Sphere sphere{sphereName, material->second, ctr, r};
                         std::shared_ptr<Shape> x = std::make_shared<Sphere>(sphere);
                         s.shape_vec.push_back(x);
+                        object_map[sphereName] = i;
                     }
                 }
                 if (ident == "light")
@@ -176,16 +181,27 @@ Scene sdfReader(std::string const &sdfFile)
                 string_stream >> parameter2;
                 string_stream >> parameter3;
 
+                int index_of_name = object_map.find(objectName)->second;
+
+                if (transformType == "translate")
+                {
+                   s.shape_vec[index_of_name]->translate(parameter1, parameter2, parameter3);
+                }
+
+                if (transformType == "scale")
+                {
+                    s.shape_vec[index_of_name]->scale(parameter1, parameter2, parameter3);
+                }
+
                 if (transformType == "rotate")
                 {
                     float parameter4;
-
                     string_stream >> parameter4;
-
-                    
-                    //adjustWorldMat(rotate(objectName, parameter1, parameter2, parameter3, parameter4));
+                    s.shape_vec[index_of_name]->rotate(parameter1, parameter2, parameter3, parameter4);
 
                 }
+                s.shape_vec[index_of_name]->adjustWorldMat();
+            
             }
 
             //shape -> box, sphere; light -> ambient; camera; render

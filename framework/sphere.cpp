@@ -34,11 +34,13 @@ float Sphere::volum()const{
 
 Hitpoint Sphere::intersect(Ray const& r)const{
     float distance = 1.0f;
-    Ray tranfsRay{transformRay(world_transformation_inv_, r)};            //use inverse transfmatrix on the ray
-    bool hit = glm::intersectRaySphere(r.origin,glm::normalize(r.direction),ctr_,pow(r_,2),distance);
-    glm::vec3 hitpoint =r.origin+ (distance*r.direction);
+    Ray transfRay{transformRay(world_transformation_inv_, r)};            //use inverse transfmatrix on the ray
+    glm::vec3 normdir = glm::normalize(transfRay.direction);
+
+    bool hit = glm::intersectRaySphere(transfRay.origin,normdir,ctr_,pow(r_,2),distance);
+    glm::vec3 hitpoint = transfRay.origin+ (distance* transfRay.direction);
     glm::vec3 normal =glm::normalize((hitpoint)-ctr_);
-    Hitpoint x {hit,distance,name_,material_,hitpoint,normal, r.direction};
+    Hitpoint x {hit,distance,name_,material_,hitpoint,normal, transfRay.direction};
     return x;
 
 }
