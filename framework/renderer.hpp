@@ -50,5 +50,6 @@ Color diffuseLight(Scene const& scene,std::shared_ptr<Shape> shape,Hitpoint cons
 Color specularLight(Scene const& scene,std::shared_ptr<Shape> shape,Hitpoint const& hitpoint);
 Color trace(Ray const& ray,Scene const& scene);
 Color shade(Ray const& r,Hitpoint t,Scene const& scene,std::shared_ptr<Shape>shade);
+Color darkShade(Ray const &ray, Hitpoint t, Scene const &scene, std::shared_ptr<Shape> shape);
 Color toneMap(Color const& col);
 #endif // #ifndef BUW_RENDERER_HPP
